@@ -14,7 +14,10 @@ namespace AssessmentDemoWebAPI
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSetting(WebHostDefaults.DetailedErrorsKey, "true");
+                    webBuilder.CaptureStartupErrors(true);
+                    webBuilder.UseSetting("https_port", "8083");
+                    webBuilder.UseStartup("AssessmentDemoWebAPI");
                 });
     }
 }
