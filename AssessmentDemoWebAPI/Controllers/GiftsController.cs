@@ -14,7 +14,7 @@ namespace AssessmentDemoWebAPI.Controllers
     {
         private readonly ILogger<GiftsController> _logger;
 
-        private static readonly ICollection<Gift> Gifts = new[]
+        private static readonly ICollection<Gift> Gifts = new List<Gift>
         {
             new Gift { Id = 0, Name = "Eco aroma candle", Price = 26 },
             new Gift { Id = 1, Name = "Wrist watch", Price = 100 },
@@ -52,7 +52,7 @@ namespace AssessmentDemoWebAPI.Controllers
 
         [HttpPost]
         [ServiceFilter(typeof(PriceFilter))]
-        public ActionResult<Gift> Add([FromBody][BindRequired] Gift gift)
+        public ActionResult<Gift> Add([FromForm][BindRequired] Gift gift)
         {
             gift.Id = Gifts.Count;
             Gifts.Add(gift);
