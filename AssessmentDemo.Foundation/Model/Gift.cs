@@ -1,9 +1,12 @@
-﻿namespace AssessmentDemo.Foundation.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AssessmentDemo.Foundation.Model
 {
     public class Gift
     {
         public int Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public string Description { get; set; }

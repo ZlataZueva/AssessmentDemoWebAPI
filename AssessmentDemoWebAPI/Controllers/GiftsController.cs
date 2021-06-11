@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace AssessmentDemoWebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
     public class GiftsController : ControllerBase
     {
@@ -36,28 +36,32 @@ namespace AssessmentDemoWebAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult<Gift> Get(int id)
+        public IActionResult GetById(int id)
         {
             _logger.LogInformation("Getting gift with {id}", id);
             var gift = Gifts.FirstOrDefault(g => g.Id == id);
+            if (gift == null)
+            {
+                return NotFound();
+            }
 
-            return gift != null ? new ActionResult<Gift>(gift) : NotFound();
+            return Ok(gift);
         }
 
         [HttpGet("{recipientName:alpha}")]
-        public IReadOnlyCollection<Gift> Get(string recipientName)
+        public ActionResult<IReadOnlyCollection<Gift>> GetByRecipient(string recipientName)
         {
             return Gifts.Where(g => g.Recipient?.Name == recipientName).ToList();
         }
 
         [HttpPost]
         [ServiceFilter(typeof(PriceFilter))]
-        public ActionResult<Gift> Add([FromForm][BindRequired] Gift gift)
+        public IActionResult Add([BindRequired] Gift gift)
         {
             gift.Id = Gifts.Count;
             Gifts.Add(gift);
 
-            return new ActionResult<Gift>(gift);
+            return CreatedAtAction(nameof(GetById), new {id = gift.Id}, gift);
         }
     }
 }
